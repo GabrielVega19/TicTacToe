@@ -6,11 +6,12 @@
 
 char start(void);
 void clear_keyboard_buffer(void);
-void player_turn(TICTACTOE game, char player_char);
-void computer_turn(TICTACTOE game, char computer_char);
+int player_turn(TICTACTOE game, char player_char);
+int computer_turn(TICTACTOE game, char computer_char);
 char set_comp_char(char player_char);
+int check_for_win(TICTACTOE game, int index, char test_char);
 
-void main(int argc, char* argv) {
+int main(int argc, char* argv[]) {
 	char player_char;
 	char computer_char;
 	TICTACTOE game;
@@ -23,13 +24,21 @@ void main(int argc, char* argv) {
 	}
 	game->print_game(game);
 
-	while (game->squares_set(game) < 8) {
-		player_turn(game, player_char);
-		computer_turn(game, computer_char);
+	while (game->squares_set(game) < 9) {
+		if (player_turn(game, player_char)) {
+			break;
+		}
+		if (game->squares_set(game) > 8) {
+			printf("This game was a draw");
+		}
+		if (game->squares_set(game) < 9) {
+			if (computer_turn(game, computer_char)) {
+				break;
+			}
+		}
 	}
-	player_turn(game, player_char); 
 
-	game->destroy(&game);
+	ttt_destroy(&game);
 
 	return 0;
 }
@@ -68,7 +77,7 @@ char start(void) {
 	}
 }
 
-void player_turn(TICTACTOE game, char player_char) {
+int player_turn(TICTACTOE game, char player_char) {
 	int num;
 
 	printf("Enter a number between 1 and 9: ");
@@ -84,9 +93,10 @@ void player_turn(TICTACTOE game, char player_char) {
 	game->change_square(game, player_char, num);
 	game->print_game(game);
 	if (check_for_win(game, num - 1, player_char)) {
-		printf("Congratulations you won the game");
-		exit(0);
+		printf("Congratulations you won the game!!!!!!!!!\n");
+		return 1;
 	}
+	return 0;
 }
 
 void clear_keyboard_buffer(void) {
@@ -98,7 +108,7 @@ void clear_keyboard_buffer(void) {
 	}
 }
 
-void computer_turn(TICTACTOE game, char computer_char) {
+int computer_turn(TICTACTOE game, char computer_char) {
 	int index;
 
 	printf("Computer Turn\n");
@@ -111,9 +121,10 @@ void computer_turn(TICTACTOE game, char computer_char) {
 	game->change_square(game, computer_char, index + 1);
 	game->print_game(game);
 	if (check_for_win(game, index, computer_char)) {
-		printf("You lost the game to the computer");
-		exit(0);
+		printf("You lost the game to the computer!!!!!!!\n");
+		return 1;
 	}
+	return 0;
 }
 
 char set_comp_char(char player_char) {

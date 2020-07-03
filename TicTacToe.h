@@ -5,7 +5,6 @@ typedef struct tictactoe_public* TICTACTOE;
 
 struct tictactoe_public {
 	void (*print_state)(TICTACTOE hTTT);
-	void (*destroy)(TICTACTOE* phTTT);
 	void (*print_game)(TICTACTOE hTTT);
 	void (*change_square)(TICTACTOE hTTT, char input, int num);
 	int (*is_set)(TICTACTOE hTTT, int index);
@@ -16,6 +15,7 @@ struct tictactoe_public {
 };
 
 TICTACTOE ttt_init_default(void); 
+void ttt_destroy(TICTACTOE* phTTT);
 
 
 

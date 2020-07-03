@@ -6,12 +6,11 @@
 struct tictactoe_private {
 	//public stuff
 	void (*print_state)(TICTACTOE hTTT);
-	void (*destroy)(TICTACTOE* phTTT);
 	void (*print_game)(TICTACTOE hTTT);
 	void (*change_square)(TICTACTOE hTTT, char input, int num);
 	int (*is_set)(TICTACTOE hTTT, int index);
 	int (*squares_set)(TICTACTOE hTTT);
-	int (*check_horizontal)(TICTACTOE hTTT, int index, char* who_won);
+	int (*check_horizontal)(TICTACTOE hTTT, int index, char who_won);
 	int (*check_vertical)(TICTACTOE hTTT, int index, char who_won);
 	int (*check_diagonal)(TICTACTOE hTTT, int index, char test_char);
 
@@ -23,7 +22,6 @@ typedef struct tictactoe_private TicTacToe;
 
 
 void print_state(TICTACTOE hTTT);
-void destroy(TICTACTOE* phTTT);
 void print_game(TICTACTOE hTTT);
 void change_square(TICTACTOE hTTT, char input, int num);
 char upper(char input);
@@ -50,7 +48,6 @@ TICTACTOE ttt_init_default(void) {
 		}
 
 		pTTT->print_state = print_state;
-		pTTT->destroy = destroy;
 		pTTT->print_game = print_game;
 		pTTT->change_square = change_square;
 		pTTT->is_set = is_set;
@@ -79,16 +76,16 @@ void print_state(TICTACTOE hTTT) {
 	return;
 }
 
-void destroy(TICTACTOE* phTTT) {
+void ttt_destroy(TICTACTOE* phTTT) {
 	TicTacToe* pTTT = (TicTacToe*)*phTTT;
 
 	if (pTTT != NULL) {
 		free(pTTT->state);
+		pTTT->state = NULL;
 		free(pTTT);
 	}
 
 	*phTTT = NULL;
-
 	return;
 }
 
