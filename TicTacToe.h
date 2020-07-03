@@ -11,6 +11,8 @@ struct tictactoe_public {
 	int (*is_set)(TICTACTOE hTTT, int index);
 	int (*squares_set)(TICTACTOE hTTT);
 	int (*check_horizontal)(TICTACTOE hTTT, int index, char who_won);
+	int (*check_vertical)(TICTACTOE hTTT, int index, char who_won);
+	int (*check_diagonal)(TICTACTOE hTTT, int index, char test_char);
 };
 
 TICTACTOE ttt_init_default(void); 

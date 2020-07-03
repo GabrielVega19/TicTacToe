@@ -12,6 +12,8 @@ struct tictactoe_private {
 	int (*is_set)(TICTACTOE hTTT, int index);
 	int (*squares_set)(TICTACTOE hTTT);
 	int (*check_horizontal)(TICTACTOE hTTT, int index, char* who_won);
+	int (*check_vertical)(TICTACTOE hTTT, int index, char who_won);
+	int (*check_diagonal)(TICTACTOE hTTT, int index, char test_char);
 
 	//private stuff
 	char* state;
@@ -29,6 +31,11 @@ int is_set(TICTACTOE hTTT, int index);
 int squares_set(TICTACTOE hTTT);
 int row_win(TicTacToe* pTTT, int min, int max, char c);
 int check_horizontal(TICTACTOE hTTT, int index, char who_won);
+int check_column(TicTacToe* pTTT, int offset, char test_char);
+int check_vertical(TICTACTOE hTTT, int index, char who_won);
+int is_even(int num);
+int check_line(TicTacToe* pTTT, int start, int offset, char test_char);
+int check_diagonal(TICTACTOE hTTT, int index, char test_char);
 
 
 TICTACTOE ttt_init_default(void) {
@@ -49,6 +56,8 @@ TICTACTOE ttt_init_default(void) {
 		pTTT->is_set = is_set;
 		pTTT->squares_set = squares_set;
 		pTTT->check_horizontal = check_horizontal;
+		pTTT->check_vertical = check_vertical;
+		pTTT->check_diagonal = check_diagonal;
 		
 		pTTT->num_squares_set = 0;
 		for (int i = 0; i < 9; i++) {
@@ -181,5 +190,89 @@ int row_win(TicTacToe* pTTT, int min, int max, char test_char) {
 			win = 0;
 		}
 	}
+	return win;
+}
+
+int check_vertical(TICTACTOE hTTT, int index, char who_won) {
+	TicTacToe* pTTT = (TicTacToe*)hTTT;
+
+	//check row 1
+	if ((index % 3) == 0) {
+		return check_column(pTTT, 0, who_won);
+	}
+
+	//check row 2
+	else if ((index % 3) == 1) {
+		return check_column(pTTT, 1, who_won);
+	}
+
+	//check row 3
+	else if ((index % 3) == 2) {
+		return check_column(pTTT, 2, who_won);
+	}
+
+	else {
+		printf("Invalid index in check_vertical");
+		return -99999;
+	}
+}
+
+int check_column(TicTacToe* pTTT, int offset, char test_char) {
+	int win = 1;
+	test_char = upper(test_char);
+
+	for (int i = 0; i < 3; i++) {
+		if (pTTT->state[(i * 3) + offset] != test_char) {
+			win = 0;
+		}
+	}
+	return win;
+}
+
+int check_diagonal(TICTACTOE hTTT, int index, char test_char) {
+	TicTacToe* pTTT = (TicTacToe*)hTTT;
+	
+	if (is_even(index)) {
+		if (index == 4) {
+			if (check_line(pTTT, 0, 4, test_char)) {
+				return 1;
+			}
+			else if (check_line(pTTT, 2, 2, test_char)) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
+		}
+		else if (is_even(index / 2)) {
+			return check_line(pTTT, 0, 4, test_char);
+		}
+		else if (!is_even(index / 2)) {
+			return check_line(pTTT, 2, 2, test_char);
+		}
+		else {
+			printf("Invalid index in check_vertical");
+			return -99999;
+		}
+	}
+	else {
+		return 0;
+	}
+}
+
+int is_even(int num) {
+	return ((num % 2) == 0) ? 1 : 0;
+}
+
+int check_line(TicTacToe* pTTT, int start, int offset, char test_char) {
+	int win = 1;
+	test_char = upper(test_char);
+
+	for (int i = 0; i < 3; i++) {
+		if (pTTT->state[(i * offset) + start] != test_char) {
+			win = 0;
+		}
+	}
+
 	return win;
 }

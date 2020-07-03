@@ -84,7 +84,7 @@ void player_turn(TICTACTOE game, char player_char) {
 	game->change_square(game, player_char, num);
 	game->print_game(game);
 	if (check_for_win(game, num - 1, player_char)) {
-		printf("Congradulations you won the game");
+		printf("Congratulations you won the game");
 		exit(0);
 	}
 }
@@ -103,9 +103,9 @@ void computer_turn(TICTACTOE game, char computer_char) {
 
 	printf("Computer Turn\n");
 
-	index = rand() % 3;
+	index = rand() % 9;
 	while (game->is_set(game, index)) {
-		index = rand() % 3;
+		index = rand() % 9;
 	}
 
 	game->change_square(game, computer_char, index + 1);
@@ -131,6 +131,12 @@ char set_comp_char(char player_char) {
 
 int check_for_win(TICTACTOE game, int index, char test_char) {
 	if (game->check_horizontal(game, index, test_char)) {
+		return 1;
+	}
+	else if (game->check_vertical(game, index, test_char)) {
+		return 1;
+	}
+	else if (game->check_diagonal(game, index, test_char)) {
 		return 1;
 	}
 	else {
