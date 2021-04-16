@@ -1,2 +1,1 @@
-# TicTacToe
-literally just an average game of TicTacToe written in C after one year of CS classes
+This is a game of tic tac toe written in C that I wrote in my spare time.
